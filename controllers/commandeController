@@ -1,0 +1,206 @@
+const Commande = require('../models/commandeModel');
+
+
+// Retrieve all Commandes from the database.
+exports.getAll = (req, res) => {
+    Commande.getAll((err, data) => {
+        if (err)
+        res.status(500).send({
+            message:
+            err.message || "Some error occurred while retrieving commandes."
+        });
+        else res.send(data);
+        console.log(data);
+    });
+};
+
+// Find all Commandes with a idCommande
+exports.findById = (req, res) => {
+    Commande.findById(req.params.idCommande, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found Commande with id ${req.params.idCommande}.`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving Commande with id " + req.params.idCommande
+                });
+            }
+        } else res.send(data);
+    });
+    
+};
+
+// Find date Commandes with an idCommande
+exports.findDate = (req, res) => {
+    Commande.findDate(req.params.idCommande, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found Commande with id ${req.params.idCommande}.`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving Commande with id " + req.params.idCommande
+                });
+            }
+        } else res.send(data);
+    });
+    
+};
+
+// Find montant Commandes with an idCommande and idArticle
+exports.findMontant = (req, res) => {
+    Commande.findMontant(req.params.idCommande, req.params.idArticle, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found Commande with idCommande ${req.params.idCommande} and idArticle ${req.params.idArticle}.`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving Commande with id " + req.params.idCommande
+                });
+            }
+        } else res.send(data);
+    });
+    
+};
+
+// Find articles Commandes with an idCommande
+exports.findArticles = (req, res) => {
+    Commande.findArticles(req.params.idCommande, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found Commande with idCommande ${req.params.idCommande}.`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving Commande with id " + req.params.idCommande
+                });
+            }
+        } else res.send(data);
+    });
+    
+};
+
+// Find all Commandes with an idUser
+exports.findByIdUser = (req, res) => {
+    console.log(req.params.idUser);
+    Commande.findByIdUser(req.params.idUser, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found Commande with idUser ${req.params.idUser}.`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving Commandes with idUser " + req.params.idUser
+                });
+            }
+        } else res.send(data);
+    });
+    
+};
+
+
+// Create and Save a new Commande
+exports.create = (req, res) => {
+
+    // Validate request
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+    }
+
+    // Create a Commande
+    const commande = new Commande({
+        idCommande: req.body.idCommande,
+        idArticle: req.body.idArticle,
+        quantite: req.body.quantite,
+        montant: req.body.montant
+    });
+
+    // Save Commande in the database
+    Commande.create(commande, (err, data) => {
+        if (err) {
+            // if (err.kind === "email_cannot_be_null") {
+            //     res.status(404).send({
+            //         message: `email format is not valid.`
+            //     });
+            // } else {
+                res.status(500).send({
+                    message: "Some error occurred while validating the Commande."
+                });
+            // }
+        }
+        else res.send(data);
+    });
+};
+
+// Find the new idCommande
+exports.newIdCommande = (req, res) => {
+    Commande.newIdCommande((err, data) => {
+        if (err) {
+            // if (err.kind === "not_found") {
+            //     res.status(404).send({
+            //     message: `Not found Commande with id ${req.params.idCommande}.`
+            //     });
+            // } else {
+                res.status(500).send({
+                message: "Error retrieving new idCommande "
+                });
+            // }
+        } else res.send(data);
+    });
+    
+};
+
+// Delete a Commande with the specified idCommande and idArticle in the request
+exports.delete = (req, res) => {
+    Commande.remove(req.params.idCommande, req.params.idArticle, (err, data) => {
+        if (err) {
+        if (err.kind === "not_found") {
+            res.status(404).send({
+            message: `Not found Commande with idCommande ${req.params.idCommande} and idArticle ${req.params.idArticle}.`
+            });
+        } else {
+            res.status(500).send({
+            message: "Could not delete Commande with idCommande " + req.params.idCommande + " and idArticle " + req.params.idArticle
+            });
+        }
+        } else res.send({ message: `Commande was deleted successfully!` });
+    });
+};
+
+// Update a Commande identified by the idCommande and idArticle in the request
+exports.update = (req, res) => {
+    // Validate Request
+    if (!req.body) {
+        res.status(400).send({
+        message: "Content can not be empty!"
+        });
+    }
+    
+    Commande.updateById(
+        req.params.idCommande,
+        req.params.idArticle,
+        new Commande(req.body),
+        (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+            res.status(404).send({
+                message: `Not found Commande with idCommande ${req.params.idCommande} and idArticle ${req.params.idCommande}.`
+            });
+            } else {
+            res.status(500).send({
+                message: "Error updating Commande with idCommande " + req.params.idCommande + " and idArticle " + req.params.idArticle
+            });
+            }
+        } else res.send(data);
+        }
+    );
+};

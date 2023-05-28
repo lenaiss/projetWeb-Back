@@ -1,0 +1,76 @@
+const Article = require('../models/articleModel');
+
+
+// Retrieve all Articles from the database.
+exports.getAll = (req, res) => {
+    Article.getAll((err, data) => {
+        if (err)
+        res.status(500).send({
+            message:
+            err.message || "Some error occurred while retrieving agencies."
+        });
+        else res.send(data);
+    });
+};
+
+// Find a single Article with a id_agency
+exports.findById = (req, res) => {
+    Article.findById(req.params.idArticle, (err, data) => {
+        if (err) {
+        if (err.kind === "not_found") {
+            res.status(404).send({
+            message: `Not found Article with id ${req.params.idArticle}.`
+            });
+        } else {
+            res.status(500).send({
+            message: "Error retrieving Article with id " + req.params.idArticle
+            });
+        }
+        } else res.send(data);
+    });
+    
+};
+
+
+
+
+
+
+// exports.getAllArticles = async (req, res) => {
+//     const articles = await Article.findAll();
+//     res.json(articles);
+// };
+
+// exports.getArticleById = async (req, res) => {
+//     const article = await Article.findByPk(req.params.id);
+
+//     if (article) {
+//         res.json(article);
+//     } else {
+//         res.status(404).json({ message: 'Article not found' });
+//     }
+// };
+
+
+// exports.queryData = function(request,callback){
+//     // console.log("query")
+//     getConnection().query(request,function(err,result){
+//      try{
+//          if(err) console.log(err);
+//          if (typeof callback === 'function') {
+//              callback(result);
+//          }
+//      }
+//      catch {
+ 
+//      }
+//      });
+//  }
+ 
+//  exports.queryAll = function(req,res){
+//      this.queryData(`SELECT idArticle FROM articles`, function(result){
+//      console.log(result);
+//      res.json(result);
+//      }
+//      );
+//  }

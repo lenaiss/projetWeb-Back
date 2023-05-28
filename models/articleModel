@@ -1,0 +1,48 @@
+const sql = require("../db.js");
+
+
+// Constructor
+const Article = function(article){
+    this.idArticle = article.idArticle;
+    this.nomArticle = article.nomArticle;
+    this.idArtiste = article.idArtiste;
+    this.image = article.image;
+    this.prix = article.prix;
+    this.typeArticle = article.typeArticle;
+    this.description = article.description;
+    this.dimension = article.dimension;
+    this.dateSortie = article.dateSortie;
+    this.disponibilite = article.disponibilite;
+}
+
+//Get all articles in database
+Article.getAll = result => {
+    sql.query("SELECT * FROM articles", (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      result(null, res);
+    });
+  };
+
+//Get article by id
+Article.findById = (idArticle, result) => {
+    sql.query(`SELECT * FROM articles WHERE idArticle = ${idArticle}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length) {
+            result(null, res[0]);
+            return;
+        }
+        // not found agency with the id
+        result({ kind: "not_found" }, null);
+    });
+};
+
+
+module.exports= Article;

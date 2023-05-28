@@ -1,0 +1,26 @@
+// Middleware pour vérifier l'authentification et les autorisations
+function requireAuthentication(req, res, next) {
+  // Vérifier si l'utilisateur est authentifié
+  if (!req.session.user) {
+    // Rediriger vers la page de connexion ou afficher un message d'erreur
+    res.redirect("/login");
+    return;
+  }
+
+  // Vérifier les autorisations en fonction du rôle de l'utilisateur
+  if (req.session.user.role !== "user") {
+    // Rediriger vers la page d'accès refusé ou afficher un message d'erreur
+    //res.redirect("/access-denied");
+    console.log("Pas connécté, accès non autorisé");
+    return;
+  }
+
+  // L'utilisateur a l'autorisation requise, poursuivre le traitement
+  next();
+}
+
+// Exemple d'utilisation du middleware pour une route protégée
+app.get("/user/connexion", requireAuthentication, function(req, res) {
+    // Afficher le tableau de bord administrateur
+    res.render("user-connexion");
+});

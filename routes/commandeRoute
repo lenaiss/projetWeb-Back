@@ -1,0 +1,36 @@
+const express = require('express');
+const commandeControllers = require('../controllers/commandeController');
+
+const router = express.Router();
+
+//Get all commande in database
+router.get('/', commandeControllers.getAll);
+
+//Get commande by id
+router.get('/numCommande/:idCommande', commandeControllers.findById);
+
+//Get commande by idUser
+router.get('/user/:idUser', commandeControllers.findByIdUser);
+
+//Add a new commande
+router.post('/commander', commandeControllers.create);
+
+//Get new idCommande
+router.get('/newId', commandeControllers.newIdCommande);
+
+//Get dateCommande
+router.get('/date/:idCommande', commandeControllers.findDate);
+
+//Get montant Commande
+router.get('/montant/:idCommande/:idArticle', commandeControllers.findMontant);
+
+//Get articles Commande
+router.get('/articles/:idCommande/', commandeControllers.findArticles);
+
+//Delete Commande by id
+router.delete('/:idCommande/:idArticle', commandeControllers.delete);
+
+//Update Commande by id
+router.put('/:idCommande/:idArticle', commandeControllers.update);
+
+module.exports = router;

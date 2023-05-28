@@ -1,0 +1,62 @@
+const express = require('express');
+const router = express.Router();
+
+const userController = require('../controllers/userController');
+
+//Add a new user
+router.post('/register', userController.create);
+
+//login a user
+router.post('/login', userController.login);
+
+//Get all users in database
+router.get('/', userController.getAll);
+
+//Get user by id
+router.get('/:id_user', userController.findById);
+
+//Get user by email
+router.get('/email/:email', userController.findByEmail);
+
+//Update user by id
+router.put('/:id_user', userController.updateById);
+
+//Delete user by id
+router.delete('/:id_user', userController.delete);
+
+module.exports = router;
+
+
+// const express = require("express");
+// const { registerUser, loginUser, logoutUser, currentUser } = require("../controllers/userController");
+// const validateToken = require("../middleware/tokenValidationHandler");
+
+// const router = express.Router();
+
+// router.post("/register", registerUser);
+
+// router.post("/login", loginUser);
+
+// router.get("/current", validateToken, currentUser);
+
+// router.get("/logout", validateToken, logoutUser);
+
+
+// module.exports = router;
+
+
+// const usersControllers = require('../controllers/usersController');
+// // const PanierController = require("../controllers/panierController");
+// // const authMidlle= require('../middlewares/authMiddle')
+
+
+// // les routes de base
+// router.get('/', usersControllers.getAllUsers);
+// router.get('/:id', usersControllers.getUserById);
+// // router.post('/', usersControllers.createUser);
+// // router.put('/:id', usersControllers.updateUser);
+// // router.delete('/:id', usersControllers.deleteUser);
+// // router.get('/:id/panier', authMidlle.auth,PanierController.getAllRecettesPanier);
+// // router.post('/:id/panier', authMidlle.auth, PanierController.ajouterRecetteAuPanier);
+// // router.put('/:id/panier', authMidlle.auth, PanierController.supprimerRecetteDuPanier);
+// module.exports = router;

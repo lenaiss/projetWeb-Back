@@ -1,0 +1,28 @@
+const express = require('express');
+const articleControllers = require('../controllers/articleController');
+
+const router = express.Router();
+
+// router.get('/articles', articleControllers.queryAll);
+
+
+//Get all agencies in database
+router.get('/', articleControllers.getAll);
+
+//Get agency by id
+router.get('/:idArticle', articleControllers.findById);
+
+
+// function(req,res,next){
+//     db.queryAll(req ,res);
+//         // console.log(result);
+//         // res.send(result);
+//   });
+
+// les routes de base
+// router.get('/allArticles', articleControllers.getAllArticles);
+// router.get('/:id', articleControllers.getArticleById);
+// router.post('/', usersControllers.createUser);
+// router.put('/:id', usersControllers.updateUser);
+// router.delete('/:id', usersControllers.deleteUser);
+module.exports = router;

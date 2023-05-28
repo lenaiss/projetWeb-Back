@@ -1,0 +1,32 @@
+const Artiste = require('../models/artisteModel');
+
+
+// Retrieve all Artistes from the database.
+exports.getAll = (req, res) => {
+    Artiste.getAll((err, data) => {
+        if (err)
+        res.status(500).send({
+            message:
+            err.message || "Some error occurred while retrieving agencies."
+        });
+        else res.send(data);
+    });
+};
+
+// Find a single Artiste with a idArtiste
+exports.findById = (req, res) => {
+    Artiste.findById(req.params.idArtiste, (err, data) => {
+        if (err) {
+        if (err.kind === "not_found") {
+            res.status(404).send({
+            message: `Not found Artiste with id ${req.params.idArtiste}.`
+            });
+        } else {
+            res.status(500).send({
+            message: "Error retrieving Artiste with id " + req.params.idArtiste
+            });
+        }
+        } else res.send(data);
+    });
+    
+};

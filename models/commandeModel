@@ -1,0 +1,200 @@
+const sql = require("../db.js");
+
+
+// Constructor
+const Commande = function(commande){
+    this.idCommande = commande.idCommande;
+    // this.idUser = commande.idUser;
+    this.idArticle = commande.idArticle;
+    this.quantite = commande.quantite;
+    this.montant = commande.montant;
+}
+
+//Get all commandes in database
+Commande.getAll = result => {
+    sql.query("SELECT * FROM commandes", (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      result(null, res);
+    });
+};
+
+//Get commande by id
+Commande.findById = (idCommande, result) => {
+    console.log(idCommande)
+    sql.query(`SELECT * FROM commandes WHERE idCommande = ${idCommande}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        if (res.length == 0) {
+            // not found commande with the id
+            result({ kind: "not_found" }, null);
+        }
+        else {
+            result(null, res);
+            return;
+        }
+    });
+};
+
+//Get all commandes with idUser
+Commande.findByIdUser = (idUser, result) => {
+    console.log(idUser);
+    sql.query(`SELECT * FROM commandes WHERE idUser = ${idUser}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length == 0) {
+            // not found commande with the idUser
+            result({ kind: "not_found" }, null);
+        }
+        else {
+            result(null, res);
+            return;
+        }
+    });
+};
+
+//Get date commande by id
+Commande.findDate = (idCommande, result) => {
+    console.log(idCommande)
+    sql.query(`SELECT DISTINCT dateCommande FROM commandes WHERE idCommande = ${idCommande}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        if (res.length == 0) {
+            // not found commande with the id
+            result({ kind: "not_found" }, null);
+        }
+        else {
+            result(null, res);
+            return;
+        }
+    });
+};
+
+
+
+// Add  commande in the database
+Commande.create = (newCommande, result) => {
+    // if (newCommande.email == undefined){
+    //     result({ kind: "email_cannot_be_null" }, null);
+    // }
+    // else{
+        console.log(newCommande);
+        sql.query("INSERT INTO commandes SET ?", newCommande, (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+                return;
+            }
+            
+            console.log("created commande: ", { idCommande: res.insertId, ...newCommande });
+            result(null, { idCommande: res.insertId, ...newCommande });
+        });
+    // }
+};
+
+//Get newIdCommande
+Commande.newIdCommande = (result) => {
+    sql.query(`SELECT MAX(distinct idCommande)+1 AS newId FROM commandes`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        // if (res.length) {
+        //     result(null, res[0]);
+        //     return;
+        // }
+        // not found commande with the id
+        // result({ kind: "not_found" }, null);
+        result(null, res);
+    });
+};
+
+//Get montant Commande
+Commande.findMontant = (idCommande, idArticle, result) => {
+    sql.query(`SELECT montant FROM commandes WHERE idCommande = ${idCommande} AND idArticle = ${idArticle}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length == 0) {
+            // not found montant with the couple idCommande idArticle
+            result({ kind: "not_found" }, null);
+        }
+        else {
+            result(null, res);
+            return;
+        }
+    });
+};;
+
+//Get articles Commande
+Commande.findArticles = (idCommande, result) => {
+    sql.query(`SELECT idArticle FROM commandes WHERE idCommande = ${idCommande}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length == 0) {
+            // not found montant with the couple idCommande idArticle
+            result({ kind: "not_found" }, null);
+        }
+        else {
+            result(null, res);
+            return;
+        }
+    });
+};;
+
+//Delete Commande by idCommande and idArticle
+Commande.remove = (idCommande, idArticle, result) => {
+    // sql.query("DELETE FROM commandes WHERE idCommande = ? AND idArticle = ?", idCommande, idArticle, (err, res) => {
+    sql.query(`DELETE FROM commandes WHERE idCommande = ${idCommande} AND idArticle = ${idArticle}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        if (res.affectedRows == 0) {
+            // not found Commande with the id
+            result({ kind: "not_found" }, null);
+            return;
+        }
+        console.log("deleted Commande with idCommande: ", idCommande, " and idArticle: ", idArticle);
+        result(null, res);
+    });
+};
+
+//Update Commande by idCommande and idArticle
+Commande.updateById = (idCommande, idArticle, commande, result) => {
+    // sql.query(`UPDATE commandes SET quantite = ?, montant = ? WHERE idCommande = ? AND idArticle = ?`, [commande.quantite, commande.montant, idCommande, idArticle], (err, res) => {
+    sql.query(`UPDATE commandes SET quantite = ${commande.quantite}, montant = ${commande.montant} WHERE idCommande = ${idCommande} AND idArticle = ${idArticle}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        if (res.affectedRows == 0) {
+            // not found Commande with the id
+            result({ kind: "not_found" }, null);
+            return;
+        }
+        result(null, { idCommande: idCommande, ...commande });
+    });
+};
+
+module.exports= Commande;

@@ -1,0 +1,13 @@
+const express = require('express');
+const artisteControllers = require('../controllers/artisteController');
+
+const router = express.Router();
+
+//Get all artistes in database
+router.get('/', artisteControllers.getAll);
+
+//Get artiste by id
+router.get('/:idArtiste', artisteControllers.findById);
+
+
+module.exports = router;
