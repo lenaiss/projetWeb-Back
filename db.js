@@ -1,15 +1,25 @@
-var mysql = require('mysql');
+var mysql = require('mysql2');
 const dotenv = require('dotenv');
 dotenv.config();
+
+const url = require('url');
+
+const dbUrl = process.env.DATABASE_URL; // assuming this is where you have stored the DSN
+const params = url.parse(dbUrl);
 
 
 const connection = mysql.createConnection({
     connectionLimit: 10,
-    host     : process.env.DB_HOST,
-    user     : process.env.DB_USER,
-    password : process.env.DB_PASSWORD,
-    database : process.env.DB_DATABASE,
-    port : process.env.DB_PORT
+    //host     : process.env.DB_HOST,
+    //user     : process.env.DB_USER,
+    //password : process.env.DB_PASSWORD,
+    //database : process.env.DB_DATABASE,
+    //port : process.env.DB_PORT
+    host: params.hostname,
+    user: params.auth.split(':')[0],
+    password: params.auth.split(':')[1],
+    database: params.pathname.slice(1),
+    port: params.port, 
 });
 
 // var connectionPool = null;
